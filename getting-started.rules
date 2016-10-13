@@ -1,0 +1,18 @@
+## A Very basic iptables firewall that prevents all incoming traffic unless esatblished
+*filter
+# drop all incoming traffic 
+:INPUT DROP [1769:130333]
+
+## allow all internal traffic
+-A INPUT -j ACCEPT -s localhost -d localhost
+
+## allow all open connections to respond (connections you establish)
+-A INPUT -j ACCEPT -m conntrack --ctstate RELATED,ESTABLISHED
+
+## uncomment the following line and change PUT.IP.ADD.HER to allow incoming SSH traffic FROM the specified source (-s) IP address
+## to allow all SSH traffic inbound, uncomment and remove "-s PUT.IP.ADD.HER"
+#-A INPUT -j ACCEPT -s PUT.IP.ADD.HER -p tcp --dport 22
+
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [2210:377720]
+COMMIT

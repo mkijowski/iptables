@@ -1,0 +1,18 @@
+## A basic NAT setup with eth0 on the external network and eth1 on the internal network
+## NOTE: to enable IP forwarding run the following as root:
+## echo 1 > /proc/sys/net/ipv4/ip_forward
+
+*filter
+:INPUT ACCEPT [1769:130333]
+:FORWARD ACCEPT [0:0]
+-A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -i eth1 -o eth0 -j ACCEPT
+:OUTPUT ACCEPT [2210:377720]
+COMMIT
+
+*nat
+:PREROUTING ACCEPT [335:38959]
+:POSTROUTING ACCEPT [59:4762]
+-A POSTROUTING -o eth0 -j MASQUERADE
+:OUTPUT ACCEPT [62:5178]
+COMMIT

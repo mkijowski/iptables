@@ -1,0 +1,20 @@
+## A basic IP and port redirect setup to allow manipulation of outgoing traffic 
+## NOTE: to enable IP forwarding (this wont work without it) run the following as root:
+## echo 1 > /proc/sys/net/ipv4/ip_forward
+
+*filter
+:INPUT ACCEPT [1769:130333]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [2210:377720]
+COMMIT
+
+*nat
+:PREROUTING ACCEPT [335:38959]
+:POSTROUTING ACCEPT [59:4762]
+:OUTPUT ACCEPT [62:5178]
+## The following line redirects all outbound port 80 ( --dport 80 ) traffic to the specified IP address port 80 (IP:80 )
+-A OUTPUT -p tcp --dport 80 -j DNAT --to-destination IP:80
+
+## The following line redirects all outbound traffc going to specified IP address 1 ( IP1 ) to the alternate IP address ( IP2 )
+-A OUTPUT -p tcp -d IP1 -j DNAT --to-destination IP2
+COMMIT
